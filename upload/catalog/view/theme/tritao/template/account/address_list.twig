@@ -1,0 +1,107 @@
+{{ header }}
+ {% include 'tritao/template/common/breadcrumbs.twig' %}
+<div id="account-address" class="container">
+  {% if success %}
+  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}</div>
+  {% endif %}
+  {% if error_warning %}
+  <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+	  <div class="account-address"> 
+      {{ nav_tabs }}
+      <div class="account-content"> 
+          <h3> {{ text_address_book }} {% if hide  %} <small> Altere ou cadastre um novo emdereço.</small> {% endif %} </h3>
+
+	    <fieldset>
+                                <legend><i class="fa fa-list"></i> Endereço Principal</legend>
+                                <div class="card">
+                                    <ul>
+                                        {% if addresses %}
+                                            {% for result in addresses %}
+                                                {% if result.address_id == default_address %}
+                                                    <li><b>Endereço:</b> <span>{{ result.address_1 }}</span></li>
+                                                    <li><b>Bairro:</b> <span>{{ result.address_2 }}</span> <b>Cidade:</b> <span> {{ result.city }}</span></li>
+                                                    <li><b>CEP:</b> <span>{{ result.postcode }}</span></li>
+                                                    <li><b>País:</b> <span>{{ result.country }}</span></li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                            <p>{{ text_no_results }}</p>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                               {% if addresses %}
+                                <div class="text-right">
+                                    <div class="col-sm-12 pr-0 pl-0">
+                                        <a href="{{ update }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-edit"></i> Editar Endereço</a>
+                                    </div>
+                                </div> 
+                               {% endif %} 
+                            </fieldset>      
+			    <div class="col-md-12 col-sm-12">
+                            <div class="account-conten-address">
+                                <h3>Outros Endereços <small> Adicione novos endereços.</small></h3>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <fieldset>
+                                            <legend class="cor-secundaria">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                Endereços Adicionais
+                                                <a href="{{ add }}" class="float-right"><i class="fas fa-plus"></i> Cadastrar novo endereço</a>
+                                            </legend>
+
+                                            {% if addresses %}
+                                                <div class="row">
+                                                    {% for result in addresses %}
+                                                         {% if result.address_id != default_address %}
+                                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                                            <ul class="card">
+                                                             
+                                                                    <li><b>Endereço:</b> <span>{{ result.address_1 }}</span></li>
+                                                                    <li><b>Bairro:</b> <span>{{ result.address_2 }}</span> <b>Cidade:</b> <span> {{ result.city }}</span></li>
+                                                                    <li><b>CEP:</b> <span>{{ result.postcode }}</span></li>
+                                                                    <li><b>País:</b> <span>{{ result.country }}</span></li>
+                                                                 
+
+
+                                                            </ul>
+                                                            <div class="text-right">
+                                                                <div class="col-sm-12 pr-0 pl-0">
+                                                                        <a href="{{ result.delete }}" class="btn btn-outline-danger btn-sm mr-2">{{ button_delete }}</a>
+                                                                        <a href="{{ result.update }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> {{ text_address }}</a>
+                                                                
+                                                                </div>
+                                                            </div> 
+                                                        </div> 
+                                                         {% endif %} 
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <p>{{ text_no_results }}</p>
+                                            {% endif %}
+
+
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>  
+
+	  </div>
+	  </div>
+	   <div class="text-right">
+        <div class="col-sm-12 pr-0"><a href="{{ back }}" class="btn btn-outline-secondary">{{ button_back }}</a></div>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

@@ -1,0 +1,10 @@
+ <table class="table">
+            {% for total in totals %}
+              <tr class="{{ total.code }}">
+              <td class="text-left  {{ total.code }}_title"><strong>{{ total.title }}:</strong></td>
+              <td style="width: 30%;" class="text-right  {{ total.code }}_price">{{ total.text }}</td>
+            </tr>
+               {% endfor %}
+          </table>
+		  
+		  

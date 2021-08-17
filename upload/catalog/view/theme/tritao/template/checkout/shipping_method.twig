@@ -1,0 +1,43 @@
+{% if error_warning %}
+<div class="alert alert-warning alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+{% endif %}
+{% if shipping_methods %}
+<p class="mb-2 mr-0 ml-0 mt-1">{{ text_shipping_method }}</p>
+{% for shipping_method in shipping_methods %}
+<!--<p><strong>{{ shipping_method.title }}</strong></p>-->
+{% if not shipping_method.error %}
+{% for quote in shipping_method.quote %}
+ {% if quote.code == code or not code %}
+    {% set code = quote.code %}
+	<div class="custom-control custom-checkbox">
+    <input type="radio" name="shipping_method" value="{{ quote.code }}" class="custom-control-input" id="custom-{{ quote.code }}" checked="checked" />
+	  <label class="custom-control-label" for="custom-{{ quote.code }}"> {{ quote.title }}  {{ quote.text }}</label>
+	</div>
+    {% else %}
+    <div class="custom-control custom-checkbox">
+    <input type="radio" name="shipping_method" value="{{ quote.code }}" class="custom-control-input" id="custom-{{ quote.code }}" />
+	  <label class="custom-control-label" for="custom-{{ quote.code }}"> {{ quote.title }}  {{ quote.text }}</label>
+	</div>
+    {% endif %}
+
+{% endfor %}
+{% else %}
+<div class="alert alert-danger alert-dismissible">{{ shipping_method.error }}</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+<!--<p><strong>{{ text_comments }}</strong></p>
+<p>
+  <textarea name="comment" rows="8" class="form-control">{{ comment }}</textarea>
+</p>
+<div class="buttons">
+  <div class="float-right">
+    <input type="button" value="{{ button_continue }}" id="button-shipping-method" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+  </div>
+</div>-->
+
+<script type="text/javascript"><!--
+$(document).on('change', 'input[name=\'shipping_method\']:checked', function() {
+    saveShippingMethod();
+});
+//--></script>

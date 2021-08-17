@@ -1,0 +1,26 @@
+ <article class="filter-group">
+                     <header class="card-header"> <a href="#" data-toggle="collapse" data-target="#collapse_aside1" data-abc="true" aria-expanded="false" class=""> <i class="icon-control fa fa-chevron-down"></i>
+                             <h3 class="title">Categorias </h3>
+                         </a> </header>
+                     <div class="filter-content" id="collapse_aside1" style="">
+                         <div class="card-body">
+<ul class="list-menu">
+  {% for category in categories %}
+  {% if category.category_id == category_id %} 
+  <li><a href="{{ category.href }}" data-abc="true" class="active">{{ category.name }}</a> </li>
+  {% if category.children %}
+  {% for child in category.children %}
+  {% if child.category_id == child_id %}
+  <li><a href="{{ child.href }}" data-abc="true" class="active">&nbsp;&nbsp;&nbsp;- {{ child.name }}</a> </li>
+  {% else %} 
+  <li><a href="{{ child.href }}" data-abc="true" class="">&nbsp;&nbsp;&nbsp;- {{ child.name }}</a></li>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  {% else %} <li><a href="{{ category.href }}" data-abc="true" class="">{{ category.name }}</a></li>
+  {% endif %}
+  {% endfor %}
+</ul>
+    </div>
+                     </div>
+                 </article>

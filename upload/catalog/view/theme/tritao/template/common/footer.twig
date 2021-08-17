@@ -1,0 +1,74 @@
+<footer id="footer">
+  <div class="container pt-4 pb-3">
+    <div class="row">
+	       <div class="col-sm-3">
+        <h5 class="border-bottom">{{ text_account }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ account }}">{{ text_account }}</a></li>
+          <li><a href="{{ order }}">{{ text_order }}</a></li>
+          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+        </ul>
+      </div>
+      {% if informations %}
+      <div class="col-sm-3">
+        <h5 class="border-bottom">{{ text_information }}</h5>
+        <ul class="list-unstyled">
+         {% for information in informations %}
+          <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <div class="col-sm-3">
+        <h5 class="border-bottom">{{ text_service }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+        </ul>
+      </div>
+ <div class="col-sm-3">
+        <h5 class="border-bottom">ACOMPANHE-NOS</h5>
+        <ul class="list-unstyled social-network social-circle">
+          <li><a href="https://www.instagram.com/feassobrasil/" target="_blank"><i class="fab fa-instagram"></i> <span> feassobrasil </span></a></li>
+          <li><a href="https://www.instagram.com/feassoairsoft/" target="_blank"><i class="fab fa-instagram"></i> <span> feassoairsoft </span></a></li>
+          <li><a href="https://www.instagram.com/blsbbsbrasil/" target="_blank"><i class="fab fa-instagram"></i> <span> blsbbsbrasil </span></a></li>
+          <li><a href="https://www.youtube.com/channel/UCz5lMzSlf1Yjf8OFE5R-bVg" target="_blank"><i class="fab fa-youtube"></i> <span> Feasso Brasil Oficial </span></a></li>
+          <li><a href="https://www.youtube.com/channel/UCl4R7oTj_UeYiARpqb6FE9A" target="_blank"><i class="fab fa-youtube"></i> <span> Feasso-Airsoft oficial</span></a></li>
+          <li><a href="https://pt-br.facebook.com/Feasso" target="_blank"><i class="fab fa-facebook-f"></i> <span> Feasso Brasil Oficial</span></a></li>
+          <li><a href="https://www.facebook.com/blsairsoft/" target="_blank"><i class="fab fa-facebook-f"></i> <span> BLS-bb's Brasil</span></a></li>
+
+        </ul>
+      </div>
+     <!-- <div class="col-sm-3">
+        <h5>{{ text_extra }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+          <li><a href="{{ voucher }}">{{ text_voucher }}</a></li>
+          <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>
+          <li><a href="{{ special }}">{{ text_special }}</a></li>
+        </ul>
+      </div>-->
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+        <div class="col-sm-5 float-left"> <span class="footer-copyright">{{ powered }}</span></div>
+        <div class="text-center d-none d-sm-block">
+          <span class="selos">Selos de Segurança</span>
+          <a href="http://www.siteadvisor.com/sitereport.html?url=feasso.com.br" target="_blank"><img class="img-responsive footer-payment-img float-right" src="./image/McAfee-min.png" alt=""></a>
+          <a href="https://safeweb.norton.com/report/show?url=http://www.feasso.com.br/" target="_blank"><img class="img-responsive footer-payment-img float-right" src="./image/norton.png" alt=""></a>
+          <a href="https://transparencyreport.google.com/safe-browsing/search?url=https://www.feasso.com.br" target="_blank"><img class="img-responsive footer-payment-img float-right" src="./image/google.png" alt="Google Safe"></a>
+
+        </div>
+    </div>
+</div>
+</footer>
+{{ alerta }}
+{{ cookie }}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+</body>
+</html>

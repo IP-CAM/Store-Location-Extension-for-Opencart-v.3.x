@@ -1,0 +1,178 @@
+{{ header }}
+<div class="storelocator">
+            <div class="storelocator-loader"></div>
+            <div class="storelocator-sidebar">
+                <form class="storelocator-formSearch" name="form-search">
+                    <input type="text" class="storelocator-inputSearch" placeholder="bairro, endereço ou CEP" autocomplete="off" />
+                    <div class="storelocator-formFilters">
+              {% if categories %}
+        {% for category in categories %}
+         {% if loop.index0 is divisible by(2) %}
+        <div class="storelocator-formFiltersRow">
+         {% endif %}
+        <div class="storelocator-formCheckbox">
+        <input type="checkbox"   id="category-{{ category.id }}"data-filter  value="{{ category.id }}" />
+          <label for="category-{{ category.id }}" class="category-{{ category.id }}">{{ category.name }}</label>
+        </div>
+        {% if loop.index is divisibleby(2) or loop.last %}
+             </div>
+            {% endif %}
+        
+        {% endfor %}
+   
+        {% endif %}
+                    </div>
+                </form>
+                <nav class="storelocator-nav">
+                    <ul class="storelocator-navList">
+                        <li class="storelocator-navListItem active">
+                            <button class="storelocator-navButton" data-switch-view data-target="map">Map</button>
+                        </li>
+                        <li class="storelocator-navListItem">
+                            <button class="storelocator-navButton" data-switch-view data-target="list">List</button>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="storelocator-sidebarResults"></div>
+            </div>
+            <div class="storelocator-googleMaps active">
+                <div id="storelocator-googleMapsCanvas"></div>
+                <button class="storelocator-geolocButton"></button>
+            </div>
+        </div>  
+ <style>
+.storelocator-formFilters label.category-1:before {
+    border: 2px solid #41a84e;
+}
+.storelocator-formFilters label.category-1:after {
+    background-color: #41a84e;
+}
+.storelocator-formFilters label.category-2:before {
+    border: 2px solid #00b3f7;
+}
+.storelocator-formFilters label.category-2:after {
+    background-color: #00b3f7;
+}
+.storelocator-formFilters label.category-3:before {
+    border: 2px solid rgba(0,0,0,.3);
+}
+.storelocator-formFilters label.category-3:after {
+    background-color: #ea4c89;
+}
+.storelocator-sidebarResultsListItem[data-category="1"] {
+    border-left: 5px solid #41a84e;
+}
+.storelocator-sidebarResultsListItem[data-category="2"] {
+    border-left: 5px solid #00b3f7;
+}
+.storelocator-sidebarResultsListItem[data-category="3"] {
+    border-left: 5px solid rgba(0,0,0,.3);
+}
+.storelocator-formFilters label:after {
+    content: "";
+    display: block;
+    opacity: 0;
+    position: absolute;
+    width: 14px !important;
+    height: 14px !important;
+    top: 3px !important;
+    left: 3px !important;
+    border-radius: 3px !important;
+    transition: opacity .2s ease-out !important;
+    background-color: rgba(0,0,0,.3);
+}
+.storelocator-formFilters label {
+    position: relative !important;
+    padding: 0px 5px 6px 30px !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+}
+.storelocator-detailStoreTitle a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+.storelocator-detailStoreEmail {
+    display: block;
+}
+.storelocator-detailStoreEmail {
+    display: block;
+}
+ </style>     
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"></script>
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/storelocatorjs/css/storelocator.css" />
+<script src="catalog/view/javascript/storelocatorjs/dist/storelocator/js/storelocator.js?ver=1.1.5"></script> 
+
+<script>
+            var myStorelocator = new storelocatorjs({
+                options: {
+                    apiKey: '{{ config_stores['api_key'] }}',
+                    webServiceUrl: 'index.php?route=information/maps/stores',
+                    {% if config_stores['cluster'] == 1 %}
+                    cluster: {
+                        options: {
+                            averageCenter: true,
+                            gridSize: 50,
+                            imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                            maxZoom: 13,
+                            minimumClusterSize: 2,
+                            styles: [{
+                                url: 'image/cluster.png',
+                                textSize: 14,
+                                textColor: '#000',
+                                width: 70,
+                                height: 70
+                            }],
+                            zoomOnClick: true
+                        },
+                        status: true
+                    },
+                  {% endif %}
+                    // Debug mode
+                    debug: false,
+                    geolocation: {
+                        startOnLoad: true,
+                        status: true
+                    },
+                    map: {
+                        markers: {
+                            width: 30,
+                            height: 40,
+                            styles: [{
+                                'category': 'userPosition',
+                                'colorBackground': '#33ccff',
+                                'colorText': '#fff'
+                            }, {
+                                'category': '1',
+                                //'colorBackground': '#41a84e',
+                               
+                               // 'colorText': '#fff'
+                          
+                                'icon':'http://localhost/feasso/image/store_location/icon/pim-mapa-loja-Airsoft.png'
+                                
+                            },{
+                                'category': '2',
+                                'colorBackground': '#00b3f7',
+                                'colorText': '#fff'
+                            },{
+                                'category': '3',
+                                'colorBackground': '#ea4c89',
+                                'colorText': '#fff'
+                            }]
+                        
+                        },
+                        options: {
+                            styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#6195a0'}]},{'featureType':'administrative.province','elementType':'geometry.stroke','stylers':[{'visibility':'off'}]},{'featureType':'landscape','elementType':'geometry','stylers':[{'lightness':'0'},{'saturation':'0'},{'color':'#f5f5f2'},{'gamma':'1'}]},{'featureType':'landscape.man_made','elementType':'all','stylers':[{'lightness':'-3'},{'gamma':'1.00'}]},{'featureType':'landscape.natural.terrain','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi.park','elementType':'geometry.fill','stylers':[{'color':'#bae5ce'},{'visibility':'on'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-100},{'lightness':45},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#fac9a9'},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'labels.text','stylers':[{'color':'#4e4e4e'}]},{'featureType':'road.arterial','elementType':'labels.text.fill','stylers':[{'color':'#787878'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'transit.station.airport','elementType':'labels.icon','stylers':[{'hue':'#0a00ff'},{'saturation':'-77'},{'gamma':'0.57'},{'lightness':'0'}]},{'featureType':'transit.station.rail','elementType':'labels.text.fill','stylers':[{'color':'#43321e'}]},{'featureType':'transit.station.rail','elementType':'labels.icon','stylers':[{'hue':'#ff6c00'},{'lightness':'4'},{'gamma':'0.75'},{'saturation':'-68'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#eaf6f8'},{'visibility':'on'}]},{'featureType':'water','elementType':'geometry.fill','stylers':[{'color':'#c7eced'}]},{'featureType':'water','elementType':'labels.text.fill','stylers':[{'lightness':'-49'},{'saturation':'-53'},{'gamma':'0.79'}]}]
+                        }
+                    }
+                },
+                onReady: function(map) {
+                    this.triggerRequest({
+                         'lat': {{ config_stores['default_lat'] }},
+                        'lng': {{ config_stores['default_lng'] }}
+                    });
+                }
+            });
+        </script> 
+ 
+{{ footer }}

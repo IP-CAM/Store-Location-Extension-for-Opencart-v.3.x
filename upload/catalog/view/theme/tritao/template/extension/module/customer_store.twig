@@ -1,0 +1,149 @@
+{{ header }}
+ {% include 'tritao/template/common/breadcrumbs.twig' %}
+<div id="account-download" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h2>{{ heading_title }}</h2>
+     
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th class="text-left">{{ text_url }}</th>
+              <th class="text-left">{{ text_verified }}</th>
+              <th class="text-left">{{ text_action }}</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for customer_store in customer_stores %}
+          <tr>
+            {% if customer_store %}
+
+            <td class="text-left"><a href="{{ customer_store.url }}" target="_blank">{{ customer_store.url }}</a></td>
+            <td class="text-left">{% if customer_store.status %} {{ text_enabled }} {% else %} {{ text_disabled }} {% endif %}</td>
+            <td><a href="{{ customer_store.href }}" data-toggle="tooltip" title="{{ button_download }}" class="btn btn-primary"><i class="fa fa-cloud-download"></i>{{ button_download }}</a>  <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" id="button-check-store" onclick="Store.check('{{ customer_store.store_id }}');" class="btn btn-success" style="padding:5px 10px"><i class="fas fa-check"></i>Verificar</button> <a href="" class="btn btn-danger" ><i class="fas fa-trash"></i> Excluir</a></td>  
+                
+            {% else %}
+            <td class="text-left">{{ text_empty }}</td>
+
+        </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+          
+        </table>
+      </div>
+      <div class="buttons clearfix">
+        <div class="float-right"><a href="{{ add }}" class="btn btn-primary add-store"> {{ text_add }}</a></div>
+        <div class="float-left"><a href="{{ continue }}" class="btn btn-secondary">{{ text_back }}</a></div>
+        </div>
+
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script type="text/javascript"><!--
+
+$(document).delegate('.add-store', 'click', function(e) {
+	e.preventDefault();
+
+	$('#modal-store').remove();
+
+	var element = this;
+
+	$.ajax({
+		url: $(element).attr('href'),
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-store" class="modal">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <h4 class="modal-title">' + $(element).text() + '</h4>';
+      html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+
+			html += '      </div>';
+			html += '      <div class="modal-body">' + data + '</div>';
+			html += '    </div>';
+			html += '  </div>';
+			html += '</div>';
+
+			$('body').append(html);
+
+			$('#modal-store').modal('show');
+		}
+	});
+});
+
+// Cart add remove functions
+var Store = {
+	'add': function(product_id, quantity) {
+		$.ajax({
+			url: 'index.php?route=extension/module/customer_store/check',
+			type: 'post',
+			data: 'store_id=' + store_id,
+			dataType: 'json',
+			beforeSend: function() {
+        $('#button-check-store').button('loading');
+			},
+			complete: function() {
+             $('#button-check-store').button('reset');
+			},
+			success: function(json) {
+				$('.alert-dismissible, .text-danger').remove();
+
+				if (json['success']) {
+					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+			
+					$('html, body').animate({ scrollTop: 0 }, 'slow');
+
+				//	$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	},
+  'check': function(store_id) {
+		$.ajax({
+			url: 'index.php?route=extension/module/customer_store/check',
+			type: 'post',
+			data: 'store_id=' + store_id,
+			dataType: 'json',
+      beforeSend: function() {
+        $('#button-add-store').button('loading');
+			},
+			complete: function() {
+             $('#button-add-store').button('reset');
+			},
+			success: function(json) {
+				// Need to set timeout otherwise it wont update the total
+				setTimeout(function () {
+					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+				}, 100);
+
+				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
+					location = 'index.php?route=checkout/cart';
+				} else {
+					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	},
+}
+//--></script>
+{{ footer }}

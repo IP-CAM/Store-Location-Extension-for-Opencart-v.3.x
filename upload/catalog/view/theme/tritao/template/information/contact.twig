@@ -1,0 +1,64 @@
+{{ header }}
+<div id="information-contact" class="container">
+    {% include 'tritao/template/common/breadcrumbs.twig' %}
+
+  <div class="row">
+    {{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+       <h1 class="mb-3">{{ heading_title }}</h1>
+	  <div class="row">
+	  <div class="col-sm-4" id="left">
+            <img src="https://feasso.com.br/image/contato.jpg" title="" alt="" class="img-responsive">
+ 	  </div>
+	  <div class="col-sm-8">
+              <div class="card">
+              <div class="card-body">
+               <div id="buttons">  
+              <label class="btn btn-outline-secondary">
+              <input type="radio" name="contact" value="revenda">Revenda
+              </label>
+               <label class="btn btn-outline-secondary">
+              <input type="radio" name="contact" value="consumidor">Consumidor
+              </label>
+            
+              </div></div>
+        </div>
+          <div id="contact-result">
+          </div>
+	  </div>
+	   </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script type="text/javascript"><!--
+// Account
+$(document).on('change', 'input[name=\'contact\']:checked', function() {
+    var contact_select = $(this).attr('value');
+    var ajax_url = 'index.php?route=information/contact/'+contact_select;
+    if (contact_select == 'revenda') {
+       window.location.href = "index.php?route=account/register";
+        $('#content').parent().find('h1').html('Atendimento - Revenda');
+    }else if (contact_select == 'consumidor') {
+        $('#content').parent().find('h1').html('Atendimento - Consumidor');
+    }
+    {% if  logged %}
+    ajax_url = 'index.php?route=information/contact/comsumidor';
+    {% endif %}
+    $.ajax({
+        url: ajax_url,
+        type: 'post',
+        dataType: 'html',
+        cache: false,
+        beforeSend: function() {
+            $('#contact-result').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
+        },
+        success: function(html) {
+            $('#contact-result').html(html);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});  
+//--></script>
+{{ footer }}

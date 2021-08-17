@@ -1,0 +1,61 @@
+{{ header }}
+ {% include 'tritao/template/common/breadcrumbs.twig' %}
+<div id="account-return" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+	   <div class="account-return"> 
+   {{ nav_tabs }}
+    <div class="account-content"> 
+     <h3> {{ heading_title }}</h3>
+      {% if returns %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <td class="text-right"><b>{{ column_return_id }}</b></td>
+              <td class="text-left"><b>{{ column_status }}</b></td>
+              <td class="text-left"><b>{{ column_date_added }}</b></td>
+              <td class="text-right"><b>{{ column_order_id }}</b></td>
+              <td class="text-left"><b>{{ column_customer }}</b></td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for return in returns %}
+          <tr>
+            <td class="text-right">#{{ return.return_id }}</td>
+            <td class="text-left">{{ return.status }}</td>
+            <td class="text-left">{{ return.date_added }}</td>
+            <td class="text-right">{{ return.order_id }}</td>
+            <td class="text-left">{{ return.name }}</td>
+            <td class="text-right"><a href="{{ return.href }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+          </tr>
+          {% endfor %}
+            </tbody>
+          
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination }}</div>
+        <div class="col-sm-6 text-right">{{ results }}</div>
+      </div>
+      {% else %}
+      <p class="text-center pt-4 mt-4">{{ text_empty }}</p>
+      {% endif %}
+	  </div>
+	  </div>
+      <div class="buttons clearfix">
+        <div class="float-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }} 

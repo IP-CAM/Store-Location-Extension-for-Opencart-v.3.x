@@ -1,0 +1,57 @@
+<div id="cart" class="header-cart {% if text_items > 0 %}active{% else %}{% endif %}">
+  <a  data-toggle="dropdown" href="javascript:void(0);" id="header-cart-action"  class=" dropdown-toggle"><i class="icon-cart"></i> <span id="cart-total">{{ text_items }}</span></a>
+  {% if vendedor < 30 %}
+  <div class="dropdown-menu dropdown-menu-right">
+  <ul id="cart-list">
+    {% if products or vouchers %}
+       {% for product in products %}
+        <li>
+          {% if product.thumb %} <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail" />{% endif %}
+          <p>{{ product.name }}
+              {% if product.option %}
+            {% for option in product.option %} <br />
+            - <small>{{ option.name }} {{ option.value }}</small> {% endfor %}
+            {% endif %}
+            {% if product.recurring %} <br />
+            - <small>{{ text_recurring }} {{ product.recurring }}</small> {% endif %}</p>
+          <strong>{{ product.total }}</strong><strong>{{ product.quantity }}</strong><button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="btn btn-outline-danger"><i class="fa fa-times"></i></button>
+
+         </li>
+        {% endfor %}
+        {% for voucher in vouchers %}
+         <li>
+          {% if voucher.thumb %} <img src="{{ voucher.thumb }}" alt="{{ voucher.description }}" title="{{ voucher.description }}" class="img-thumbnail" />{% endif %}
+          <p><small>{{ voucher.description }}</small>
+         
+              <small>{{ voucher.amount }}</small></p>
+         <button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
+          
+    </li>
+        {% endfor %}
+  
+    </ul>
+   
+      <div id="cart-totals">
+          {% for total in totals %}
+          {% if (total['title'] != 'Sub-total') %}
+          <p>
+           <strong>{{ total.title }}</strong>
+           <span> {{ total.text }}</span>
+          </p>
+          {% endif %}
+          {% endfor %}
+      <a href="../carrinho" title="{{ text_shopping_cart }}" class="checkout" style="width: 182px;height: 42px;margin-right: 13px;float: left;display: inline-block;"><i class="fa fa-share"></i> {{ text_shopping_cart }}</a>
+      {% if not error_warning %}
+       <a href="{{ checkout }}" class="checkout" style="display: inline-block;width: 167px;height: 42px;float: right;"><i class="fa fa-share"></i> {{ text_checkout }}</a>
+       {% endif %}
+      </div>
+   
+    {% else %}
+
+      <p class="text-center empty">{{ text_empty }}</p>
+  
+    {% endif %}
+  
+</div>
+{% endif %}
+</div>

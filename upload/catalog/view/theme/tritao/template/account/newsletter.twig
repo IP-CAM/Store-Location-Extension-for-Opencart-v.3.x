@@ -1,0 +1,50 @@
+{{ header }}
+ {% include 'tritao/template/common/breadcrumbs.twig' %}
+<div id="account-newsletter" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+	  <div class="account-newsletter"> 
+	  {{ nav_tabs }}
+      <div class="account-content"> 
+	   <h3> {{ text_newsletter }} <small> {{ heading_title }}</small> </h3>
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-newsletter" class="form-horizontal">
+        <fieldset>
+		<legend class="cor-secundaria">{{ entry_newsletter }}</legend>
+		<div class="form-group">
+		 {% if newsletter %}
+              <div class="custom-control custom-radio">
+                <input type="radio" name="newsletter" value="1" id="input-newsletter-yes" class="custom-control-input" checked="checked"/> <label for="input-newsletter-yes" class="custom-control-label">{{ text_yes }}</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" name="newsletter" value="0" id="input-newsletter-no" class="custom-control-input"/> <label for="input-newsletter-no" class="custom-control-label">{{ text_no }}</label>
+              </div>
+              {% else %}
+              <div class="custom-control custom-radio">
+                <input type="radio" name="newsletter" value="1" id="input-newsletter-yes" class="custom-control-input"/> <label for="input-newsletter-yes" class="custom-control-label">{{ text_yes }}</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" name="newsletter" value="0" id="input-newsletter-no" class="custom-control-input" checked="checked"/> <label for="input-newsletter-no" class="custom-control-label">{{ text_no }}</label>
+              </div>
+            {% endif %}
+			</div>
+         </fieldset>
+      </form>
+	   </div>
+        </div>
+		<div class="text-right">
+    <div class="col-sm-12 pr-0">
+<a href="{{ back }}" class="btn btn-light mr-4">{{ button_back }}</a>
+<button type="submit" form="form-newsletter" data-toggle="tooltip" title="{{ button_continue }}" class="btn btn-primary">{{ button_continue }}</button>
+</div>
+</div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

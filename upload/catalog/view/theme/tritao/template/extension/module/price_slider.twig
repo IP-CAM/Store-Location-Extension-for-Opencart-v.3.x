@@ -1,0 +1,133 @@
+
+{% if min_max != 0 %}
+    <div class="box sidebarFilter"{% if module_price_filter_status and module_price_filter_status == 0 %} style="display: none;" {% endif %} >
+        <div class="sidebar-title">{{ price_slider_title }}</div>
+        <form action="#" class="slider-sidebar">
+            <div class="slider-range mb-5">
+                <!--<div  data-min="{{ price_min }}" data-max="{{ price_max }}" data-unit="R$" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="{{ price_range_min }}" data-value-max="{{ price_range_max }}" data-label-result="Preço:">-->
+                    <input id="price-slider" type="text" onchange="buttonFilter();"class="slider-range-price" value=""
+                       data-slider-min="{{ price_range_min }}" data-slider-max="{{ price_range_max }}"
+                       data-slider-step="2" data-unit="R$"
+                       data-slider-value="[{{ (price_range[0] is defined and price_range[0] != '')? price_range[0]: price_range_min }},{{ (price_range[1] is defined and price_range[1] != '')? price_range[1]: price_range_max }}]"/>
+                <div class="row justify-content-center range-price mt-3">
+                   <div class="col-md-6 text-left">
+                        <p class="dark-grey-text"><strong id="resellerEarnings">{{ price_min }}</strong></p>
+                    </div>
+
+                    <div class="col-md-6 text-right">
+                        <p class="dark-grey-text"><strong id="clientPrice">{{ price_max }}</strong></p>
+                    </div>
+
+                </div>
+            <!--</div>-->
+        </form>
+    </div>
+{% endif %}
+{% if module_show_category %}
+    <div class="sidebar-categorie mb-30">
+{% if categories %}
+        <div  class="sidebar-title">{{ text_category }}</div>
+     
+         <div class="list-group list-group-flush">
+                {% for category in categories %}
+                  <li class="list-group-item"><a href="{{ category.href }}">{{ category.name }}</a></li>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+           <div class="list-group list-group-flush">
+            {% for category in categories %}
+              <div class="list-group-item">
+                <ul>
+                  {% for child in category %}
+                    <li><a href="{{ child.href }}">{{ child.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+          </div>
+
+      {% endif %}
+      </div>
+{% endif %}
+
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+-->
+<script>
+
+    /*----------------------------
+     18. Price Slider Activation
+     -----------------------------*/
+    $('.slider-range-price').each(function () {
+    //$("#price-slider").slider({
+    var t = $(this);
+        $(this).slider({
+    range: true,
+            min:{{ price_range_min }},
+            max:{{ price_range_max }},
+            values: [75, 300],
+            slide: function (event, ui) {
+           // $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+           var html ='<div class="col-md-6 text-left">';
+                   html +='<p class="dark-grey-text"><strong id="resellerEarnings">'+ unit   + ui.values[0] + '</strong></p>';
+                   html +='</div>';
+                   //html +='-';
+                   html +='<div class="col-md-6 text-right">';
+                   html +='<p class="dark-grey-text"><strong id="clientPrice">'+ unit   + ui.values[1]+'</strong></p>';
+                   html +=' </div>';
+
+               // var result = label_result + " " + unit + ui.values[0] + ' - ' + unit + ui.values[1];
+                console.log(t);
+               t.closest('.slider-range').find('.range-price').html(html);
+            }
+    });
+     });
+      // :: Slider Range Price Active Code
+    /*$('.slider-range-price').each(function () {
+         var min = jQuery(this).data('min');
+        var max = jQuery(this).data('max');
+        var unit = jQuery(this).data('unit');
+        var value_min = jQuery(this).data('value-min');
+        var value_max = jQuery(this).data('value-max');
+       // var label_result = jQuery(this).data('label-result');
+        var t = $(this);
+        $(this).slider({
+            range: true,
+            min:{{ price_range_min }},
+            max:{{ price_range_max }},
+            values: [75, 300],
+            slide: function (event, ui) {
+              // var result =  unit + ui.values[0] + ' - ' + unit + ui.values[1];
+               var html ='<div class="col-md-6 text-left">';
+                   html +='<p class="dark-grey-text"><strong id="resellerEarnings">'+ unit   + ui.values[0] + '</strong></p>';
+                   html +='</div>';
+                   //html +='-';
+                   html +='<div class="col-md-6 text-right">';
+                   html +='<p class="dark-grey-text"><strong id="clientPrice">'+ unit   + ui.values[1]+'</strong></p>';
+                   html +=' </div>';
+
+               // var result = label_result + " " + unit + ui.values[0] + ' - ' + unit + ui.values[1];
+                console.log(t);
+                var prices = ui.values[0]+','+ui.values[1];
+                //t.closest('.slider-range').find('#price-slider').html(prices);
+                buttonFilter(prices);
+                console.log(prices);
+                t.closest('.slider-range').find('.range-price').html(html);
+            
+            } 
+        });
+    });*/
+    function buttonFilter() {
+    pr = '';
+    price = $('#price-slider').val();
+    if (price != '') {
+    pr = "&pr=" + price;
+    }
+    location = "{{ action }}" + pr;
+    }
+
+
+</script>

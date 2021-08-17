@@ -1,0 +1,160 @@
+<?php
+class ModelExtensionPaymentItauShopline extends Model {
+    const EXTENSION = 'payment_itau_shopline';
+
+    public function getMethod($address, $total) {
+        $query = $this->db->query("
+            SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone`
+            WHERE geo_zone_id = '" . (int) $this->config->get(self::EXTENSION . '_geo_zone_id') . "'
+            AND country_id = '" . (int) $address['country_id'] . "'
+            AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')
+        ");
+
+        if ($total <= 0) {
+            $status = false;
+        } elseif ($this->config->get(self::EXTENSION . '_total') > 0 && $this->config->get(self::EXTENSION . '_total') > $total) {
+            $status = false;
+        } elseif (!$this->config->get(self::EXTENSION . '_geo_zone_id')) {
+            $status = true;
+        } elseif ($query->num_rows) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+
+        $currencies = array('BRL');
+        $currency_code = $this->session->data['currency'];
+        if (!in_array(strtoupper($currency_code), $currencies)) {
+            $status = false;
+        }
+
+        if (!in_array($this->config->get('config_store_id'), $this->config->get(self::EXTENSION . '_stores'))) {
+            $status = false;
+        }
+
+        if ($this->customer->isLogged()) {
+            $customer_group_id = $this->customer->getGroupId();
+        } elseif (isset($this->session->data['guest']['customer_group_id'])) {
+            $customer_group_id = $this->session->data['guest']['customer_group_id'];
+        } else {
+            $customer_group_id = $this->config->get('config_customer_group_id');
+        }
+        if (!in_array($customer_group_id, $this->config->get(self::EXTENSION . '_customer_groups'))) {
+            $status = false;
+        }
+
+        $method_data = array();
+
+        if ($status) {
+            if (strlen(trim($this->config->get(self::EXTENSION . '_imagem'))) > 0) {
+                $title = '<img src="' . HTTPS_SERVER . 'image/' . $this->config->get(self::EXTENSION . '_imagem') . '" alt="' . $this->config->get(self::EXTENSION . '_titulo') . '" />';
+            } else {
+                $title = $this->config->get(self::EXTENSION . '_titulo');
+            }
+
+            $method_data = array(
+                'code' => 'itau_shopline',
+                'title' => $title,
+                'terms' => '',
+                'sort_order' => $this->config->get(self::EXTENSION . '_sort_order')
+            );
+        }
+
+        return $method_data;
+    }
+
+    public function getOrder($data, $order_id) {
+        if (is_array($data) && (count($data) > 0) && ($order_id > '0')) {
+            $columns = implode(", ", array_values($data));
+
+            $query = $this->db->query("
+                SELECT " . $columns . "
+                FROM `" . DB_PREFIX . "order`
+                WHERE order_id = '" . (int) $order_id . "'
+            ");
+
+            if ($query->num_rows) {
+                return $query->row;
+            }
+        }
+
+        return array();
+    }
+
+    public function editOrder($data, $order_id) {
+        if (is_array($data) && (count($data) > 0) && ($order_id > '0')) {
+            $this->db->query("
+                UPDATE `" . DB_PREFIX . "order`
+                SET custom_field = '" . $this->db->escape(json_encode($data['custom_field'])) . "',
+                    payment_custom_field = '" . $this->db->escape(json_encode($data['payment_custom_field'])) . "',
+                    shipping_custom_field = '" . $this->db->escape(json_encode($data['shipping_custom_field'])) . "'
+                WHERE order_id = '" . (int) $order_id . "'
+            ");
+        }
+    }
+
+    public function getTransaction($order_id) {
+        if ($order_id > 0) {
+            $query = $this->db->query("
+                SELECT *
+                FROM `" . DB_PREFIX . "order_itaushopline`
+                WHERE `order_id` = '" . (int) $order_id . "'
+            ");
+
+            if ($query->num_rows) {
+                return $query->row;
+            }
+        }
+
+        return array();
+    }
+
+    public function addTransaction($order_id, $dc) {
+        if ($order_id > '0' && !empty($dc)) {
+            $this->db->query("
+                INSERT INTO `". DB_PREFIX ."order_itaushopline`
+                SET order_id = '" . (int) $order_id . "',
+                    dc = '" . $this->db->escape($dc) . "',
+                    tippag = '00',
+                    sitpag = '01'
+            ");
+        }
+    }
+
+    public function editTransaction($data) {
+        if (is_array($data) && (count($data) > 0)) {
+            $this->db->query("
+                UPDATE " . DB_PREFIX . "order_itaushopline
+                SET valor = '" . $this->db->escape($data['valor']) . "',
+                    tippag = '" . $this->db->escape($data['tippag']) . "',
+                    sitpag = '" . $this->db->escape($data['sitpag']) . "',
+                    dtpag = '" . $this->db->escape($data['dtpag']) . "',
+                    codaut = '" . $this->db->escape($data['codaut']) . "',
+                    numid = '" . $this->db->escape($data['numid']) . "',
+                    compvend = '" . $this->db->escape($data['compvend']) . "',
+                    tipcart = '" . $this->db->escape($data['tipcart']) . "'
+                WHERE order_id = '" . (int) $data['order_id'] . "'
+            ");
+        }
+    }
+
+    public function getTransactions() {
+        $query = $this->db->query("
+            SELECT oi.order_id FROM `" . DB_PREFIX . "order_itaushopline` oi
+            INNER JOIN `" . DB_PREFIX . "order` o ON (o.order_id = oi.order_id)
+            WHERE o.order_status_id = '" . $this->config->get(self::EXTENSION . '_situacao_aguardando_id') . "'
+            OR o.order_status_id = '" . $this->config->get(self::EXTENSION . '_situacao_gerado_id') . "'
+            OR o.order_status_id = '" . $this->config->get(self::EXTENSION . '_situacao_compensando_id') . "'
+        ");
+
+        return $query->rows;
+    }
+
+    public function getDateTimeDataBase() {
+        $query = $this->db->query("
+            SELECT NOW();
+        ");
+
+        return $query->row['NOW()'];
+    }
+}

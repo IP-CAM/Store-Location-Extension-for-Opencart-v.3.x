@@ -1,0 +1,48 @@
+<div class="card mb-3 border-color-top">
+<div class="card-body">
+<h2><i class="fas fa-user"></i> {{ customer_name }}</h2>
+<ul>
+  {% if not logged %}
+ <li> <a href="{{ login }}" >{{ text_login }}</a> </li>
+  <li><a href="{{ register }}" >{{ text_register }}</a> </li>
+  <li><a href="{{ forgotten }}" >{{ text_forgotten }}</a></li>
+  {% endif %}
+ <li><i class="fas fa-user"></i> <a href="{{ account }}" >{{ text_account }}</a></li>
+  {% if logged %}
+  <!--<li><a href="{{ edit }}" >{{ text_edit }}</a> </li>-->
+   <li><i class="fas fa-unlock"></i> <a href="{{ password }}" >{{ text_password }}</a></li>
+  {% endif %}
+ <li><i class="fas fa-address-card"></i> <a href="{{ address }}" >{{ text_address }}</a></li>
+  <li><i class="fas fa-heart"></i> <a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+    <li><i class="fas fa-building"></i> <a href="{{ company }}">Listas de CNPJ</a></li>
+
+  <!--  <li><a href="{{ order }}" >{{ text_order }}</a></li>
+<li><a href="{{ download }}" >{{ text_download }}</a></li>
+  <li><a href="{{ recurring }}" >{{ text_recurring }}</a> </li>
+  <li><a href="{{ reward }}" >{{ text_reward }}</a></li>-->
+  <li><i class="fas fa-undo-alt"></i> <a href="{{ return }}" >{{ text_return }}</a></li>
+  <!--<li><a href="{{ transaction }}">{{ text_transaction }}</a> </li>
+  <li><a href="{{ newsletter }}" >{{ text_newsletter }}</a></li>-->
+  {% if logged %}
+ <li><i class="fas fa-sign-out-alt"></i> <a href="{{ logout }}">{{ text_logout }}</a></li>
+  {% endif %}
+</ul>
+</div>
+</div>
+<div class="card mb-3 border-color-top">
+<div class="card-body">
+<h2><i class="fas fa-link"></i> Links úteis</h2>
+<ul>
+ <li> <a href="{{ links_uteis }}" ><i class="far fa-thumbs-down"></i> Fazer uma Reclamação</a> </li>
+ <li><a href="{{ links_uteis }}" ><i class="far fa-thumbs-up"></i> Dar uma Sugestão</a></li>
+ <li><a href="{{ links_uteis }}" ><i class="far fa-comment"></i> Fazer uma Denúncia</a> </li>
+
+ <li><a href="{{ links_uteis }}" ><i class="fas fa-user"></i> Suporte/RMA</a></li>
+  
+</ul>
+</div>
+</div>
+
+
+
+

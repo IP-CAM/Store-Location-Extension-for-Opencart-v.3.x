@@ -1,0 +1,24 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            {% set i = 0 %}
+            {% for breadcrumb in breadcrumbs %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active"{% if loop.first == false %} itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" {% endif %} >
+
+                        <span {% if loop.first == false  %} itemprop="name" {% endif %}>{{ breadcrumb.text }}</span> 
+                        {% if loop.first == false  %} <meta itemprop="position" content="{{ i }}" /> {% endif %}</li>
+                    {% else %}
+                    <li class="breadcrumb-item" {% if loop.first == false %} itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" {% endif %} >
+                        <a  itemprop="item"   href="{{ breadcrumb.href }}"> 
+                            <span {% if loop.first == false  %} itemprop="name" {% endif %}>{{ breadcrumb.text }}</span> </a>
+                        {% if loop.first == false  %} <meta itemprop="position" content="{{ i }}" /> {% endif %} 
+                    </li> 
+                    {% set i=i+1 %}
+                {% endif %}
+            {% endfor %}
+        </ul> 
+    </div>
+</div>
+
+

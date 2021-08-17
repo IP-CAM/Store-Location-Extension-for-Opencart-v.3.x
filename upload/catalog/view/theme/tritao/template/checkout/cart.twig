@@ -1,0 +1,302 @@
+{{ header }}
+<section data-type="main-body">
+    <div class="container">
+        <div class="row">{{ column_left }}
+            {% if column_left and column_right %}
+                {% set class = 'col-sm-6' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-sm-9' %}
+            {% else %}
+                {% set class = 'col-sm-12' %}
+            {% endif %}
+            <div id="content"  class="{{ class }}">{{ content_top }}
+                {% if error_warning %}
+                    <div data-type="system-message">
+                        <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="row-fluid">
+                    <div class=" pt-4 pb-4">
+                        <h1> Carrinho <small> Clique em finalizar compra para efetuar o seu pedido.</small> </h1>
+                    </div>
+                </div>	
+
+                <div class="caixa-sombreada">
+                    <table class="table table-bordered table-cart">
+                        <thead>
+                            <tr>
+                                <th colspan="2" scope="col" width="45%">
+                                    <h6>{{ column_name }}</h6>
+                                </th>
+                                <th class="text-center" width="15%">
+                                    <h6>{{ column_price }}</h6>
+                                </th>
+                                <th class="text-center" width="15%">
+                                    <h6>{{ column_quantity }}</h6>
+                                </th>
+                                <th class="text-center" width="10%">
+                                    <h6>Excluir</h6>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <form action="{{ action }}" method="post" enctype="multipart/form-data">
+                            {% for product in products %}
+                                <tr>
+                                    <td class="no-border conteiner-imagem text-center">
+                                        {% if product.thumb %}
+                                            <div class="imagem">
+                                                <a href="{{ product.href }}">
+                                                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail"/></a> 
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="no-border">
+                                        <div class="product-info">
+                                            <a href="{{ product.href }}" class="cor-secundaria">
+                                                {{ product.name }} {% if not product.stock %} <span class="text-danger">***</span> {% endif %}
+                                            </a>
+                                            {% if product.option %}
+                                                <ul>
+                                                    {% for option in product.option %}
+                                                        <li>
+                                                            <span>
+                                                                {{ option.name }}:
+                                                                <strong>
+                                                                    {{ option.value }}
+                                                                </strong>
+                                                            </span>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                            {% if product.reward %}
+                                                <br/>
+                                                <small>{{ product.reward }}</small>
+                                            {% endif %}
+                                            {% if product.recurring %}
+                                                <br/>
+                                                <span class="label label-info">{{ text_recurring_item }}</span>
+                                                <small>{{ product.recurring }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="preco-produto">
+                                            <strong class="preco-promocional cor-principal titulo">
+                                                {{ product.price }}
+                                            </strong>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="input-group">
+                                            <input type="text" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" size="1" class="form-control text-center">
+                                            <div class="input-group-append">
+                                                <button type="submit" data-toggle="tooltip" title="{{ button_update }}"  class="btn"><i class="fas fa-sync-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" data-toggle="tooltip" title="{{ button_remove }}" class="btn" onclick="cart.remove('{{ product.cart_id }}');"><i class="fas fa-times-circle"></i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </form>
+                        <tr class="hidden-phone bg-dark">
+                            <td colspan="4">&nbsp;</td>
+                            <td class="float-right" colspan="2">
+                                <div class="subtotal">
+                                    {% for total in totals %}
+                                        {% if  total.code == "sub_total" %}
+                                            <span>{{ total.title }}: </span>
+                                            <strong >
+                                                {{ total.text }}
+                                            </strong>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </td>
+
+                        </tr>
+                        {% if  modules %}
+                        <tr class="hidden-phone bg-dark">
+                            {% for module in modules %}
+                                {% if  module.name == "shipping" %}
+                                    {{ module.code }}
+                                {% endif %}
+                            {% endfor %}
+                            <td colspan="2" class="shipping-container">
+                                <div class="shipping-info">
+                                    <ul></ul>
+                                </div>
+                            </td>
+                        </tr>
+                      
+                       <!-- {% if not coupon_session %}
+                            <tr class="bg-dark">
+                                <td colspan="4">
+                                    {% for module in modules %}
+                                        {% if  module.name == "coupon" %}
+                                            {{ module.code }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>&nbsp;</td>
+
+                            </tr>
+                        {% else %}
+                            <tr class="bg-dark is-coupon ">
+                                <td colspan="4">
+                                    <div class="float-right">
+                                        <b class="cor-secundaria">Cupom de desconto:</b>
+                                        <span class="code-coupon">{{ coupon_name }}</span>
+                                        <button type="button" id="delete-coupon" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fas fa-times-circle"></i></button>
+
+                                        <input type="hidden" name="coupon_name" value="{{ coupon_name }}">
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div  class="coupon-discount">
+                                        <div class="cupom-valor pt-2">
+                                            {% for total in totals %}
+                                                {% if  total.code == "coupon" %}
+                                                    {{ total.title }}
+                                                    <strong class="prce">{{ total.text }}</strong>
+                                                {% endif %}
+                                            {% endfor %}	
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %} -->
+                        {% endif %}
+                        {% if desconto_feasso != '37' %}
+                        <tr class="bg-dark">
+                            <td colspan="6" class="line-18">
+                                <div class="total">
+                                    {% for total in totals %}
+                                        {% if  total.code == "desconto_feasso" %}
+                                            <div class="summary-item">
+                                                <span class="text">{{ total.title }}:</strong></span>
+                                                <strong class="price">{{ total.text }}</strong>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}	
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr class="bg-dark">
+                            <td colspan="6" class="line-18">
+                                <div class="total">
+                                    {% for total in totals %}
+                                        {% if  total.code == "total" %}
+                                            <div class="summary-item">
+                                                <span class="text">{{ total.title }}:</strong></span>
+                                                <strong class="price">{{ total.text }}</strong>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}	
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right row-fluid">
+                    <div class="col-sm-12 pr-0">
+                        <a href="{{ continue }}" class="btn btn-light mr-4">{{ button_shopping }}</a>
+                        {% if not error_warning %}
+                        <a href="{{ checkout }}" id="button-checkout-cart" class="btn btn-success"><i class="fas fa-check"></i> {{ button_checkout }}</a>              
+                        {% endif %}
+                    </div>
+                </div>
+                {{ content_bottom }}</div>
+            {{ column_right }}</div>
+    </div>
+</section>
+        <script type="text/javascript"><!--
+$(document).delegate('#delete-coupon', 'click', function () {
+                $.ajax({
+                    url: 'index.php?route=checkout/cart/removeCoupon',
+                    type: 'post',
+                    data: 'coupon=' + encodeURIComponent($('input[name=\'coupon_name\']').val()),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('.coupon-discount').addClass('loading');
+                        //$('.coupon-discount').addClass('fa fa-spinner fa-w-16 fa-spin fa-lg float-right');
+
+                    },
+                    success: function (json) {
+                        $('.alert-dismissible').remove();
+
+                        if (json['error']) {
+                            $('.breadcrumb').after('<div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+                            $('html, body').animate({scrollTop: 0}, 'slow');
+                        }
+
+                        if (json['redirect']) {
+                            location = json['redirect'];
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            });
+
+            // Load totals
+            function loadTotals() {
+                $.ajax({
+                    url: 'index.php?route=checkout/cart/totals',
+                    type: 'post',
+                    dataType: 'html',
+                    cache: false,
+                    beforeSend: function () {
+                        // $('.total').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
+                        $('.price').addClass('loading');
+
+                    },
+                    success: function (html) {
+                        $('.total').html(html);
+                        $('.price').removeClass('loading');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+            // Save the selected shipping method
+            function saveShippingMethod() {
+                var shipping_method = $('input[name=\'shipping_method\']:checked').attr('value');
+                if (shipping_method == undefined) {
+                    shipping_method = 0;
+                }
+                $.ajax({
+                    url: 'index.php?route=checkout/shipping_method/save',
+                    type: 'post',
+                    data: {shipping_method: shipping_method},
+                    dataType: 'html',
+                    cache: false,
+                    success: function (json) {
+                        if (json['redirect']) {
+                            location = json['redirect'];
+                        } else if (json['error']) {
+                            if (json['error']['warning']) {
+                                $('.error').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                            }
+                        } else {
+                            loadTotals();
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+//--></script>  
+        {{ footer }}

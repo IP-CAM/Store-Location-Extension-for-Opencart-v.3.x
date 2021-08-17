@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}" class="{{ classes | join(' ') }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{ title }}</title>
+<base href="{{ base }}" />
+{% if description %}
+<meta name="description" content="{{ description }}" />
+{% endif %}
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}" />
+{% endif %}
+{% for robot in robots %}
+<meta name="{{ robot.name }}" content="{{ robot.content }}" />
+{% endfor %}
+<meta name="facebook-domain-verification" content="in0h9dbm7ji88g4ltq6ic46onlthva" />
+<meta name="google-site-verification" content="PG0TGF64QbCD3pqt9q2YL-ol1LvKrIFzjLWB_xJCY44" />
+<link href="catalog/view/javascript/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/tritao/stylesheet/bootstrap.css" rel="stylesheet" media="screen"/>
+<link href="catalog/view/theme/tritao/stylesheet/stylesheet.css?ver={{ cache }}" rel="stylesheet">
+<link href="catalog/view/theme/tritao/stylesheet/animate.css" rel="stylesheet">
+<link href="catalog/view/theme/tritao/stylesheet/mobile.css?ver={{ cache }}" rel="stylesheet">
+{% for style in styles %}
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+<script>window['Feasso'] = {"isPhone":false,"isTablet":false,"isDesktop":true};
+  var mqls = {
+		phone: window.matchMedia('(max-width: 768px)'),
+		tablet: window.matchMedia('(max-width: 1024px)'),
+		//menu: window.matchMedia('(max-width: ' + Feasso['mobileMenuOn'] + 'px)')
+	};
+  window.matchMedia("(min-width: 400px)").addListener(function (e) { 
+    if(e.matches) { 
+      window.location.reload();
+     }else{ 
+      window.location.reload(); 
+ } }); 
+
+</script>
+<script src="catalog/view/javascript/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="catalog/view/javascript/bootstrap/js/popper.min.js" type="text/javascript"></script>
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+<script src="catalog/view/javascript/common.js?ver={{ cache }}" type="text/javascript"></script>
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '158292386254058');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=158292386254058&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+</head>
+
+{% if logged %}
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/60098905c31c9117cb7109c8/1esik012e';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+Tawk_API.onLoad = function(){
+    Tawk_API.setAttributes({
+        'name'  : "{{ firstname }}",
+        'email' : "{{ email }}",
+        'hash'  : 'hash value'
+    }, function(error){});
+}
+</script>
+<!--End of Tawk.to Script--> 
+{% endif %} 
+
+<body class="{{ class }}">
+ {% if mobile %}
+ {{ header_mobile }}
+ {% endif %}
+    {% if desktop %}     
+<div class="header-desktop">
+<nav id="top">
+  <div class="container">
+    <div id="top-links" class="nav float-left">
+      <ul class="list-inline">
+          <li class="list-inline-item"> Seja bem vindo a nossa Loja <b>Oficial</b></li>
+	  <!-- <li class="list-inline-item"><a href="{{ contact }}"><i class="fas fa-envelope"></i></a> <span class="d-none d-md-inline">contato@domain.com.br</span></li>
+        <li class="list-inline-item"><a href="{{ contact }}"><i class="fas fa-phone"></i></a> <span class="d-none d-md-inline">{{ telephone }}</span></li>-->
+
+      </ul>
+    </div>
+    <div id="top-links-center" class="nav text-center"> 
+      <ul class="list-inline">
+        <li class="list-inline-item"> 
+          Visite página Oficial BLS - BRAZIL<a href="https://blsairsoft.com.br/" target="_blank"
+      ><img class="img-responsive float-right" src="./image/bls-logo-white.png" alt="BLS -BRAZIL"></a>
+    </li>
+    </ul>
+    </div>
+    <div id="top-links" class="nav float-right">
+        <ul class="list-inline">
+        <li class="list-inline-item">
+         <a href="/index.php?route=information/novidades"><b><span class="novidades">NOVIDADES</span> <i>FEASSO</i></b></a></li>
+  
+      </ul>
+      <!--<ul class="list-inline">
+        <li class="list-inline-item">
+            <b>Preciso de ajuda:</b> <a href="{{ contact }}">Consumidor</a> / <a href="{{ contact }}">Revendedor</a></li>
+         
+      </ul>-->
+      <!--<ul class="list-inline insta">
+      <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fab fa-instagram"></i> Instagram</a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li role="separator" class="divider"></li>
+          <li class="dropdown-header">Tecnologia</li>
+          <li class="list-inline-item"><a href="https://www.instagram.com/feassobrasil/" target="_blank">@feassobrasil</a></li>
+          <li role="separator" class="divider"></li>
+          <li class="dropdown-header">Airsoft</li>
+          <li class="list-inline-item"><a href="https://www.instagram.com/feassoairsoft/" target="_blank">@feassoairsoft</a></li>
+          <li class="list-inline-item"><a href="https://www.instagram.com/blsbbsbrasil/" target="_blank">@blsbbsbrasil</a></li>
+        </ul>
+      </li>
+    </ul>-->
+    </div>
+  </div>
+</nav>
+<header>
+  <div class="container">      
+    <div class="row">
+      <div class="col-sm-3 mt-2">
+        <div id="logo">{% if logo %}<a href="{{ home }}"><img src="{{ logo }}" title="{{ name }}" alt="{{ name }}" class="img-responsive" /></a>{% else %}
+          <h1><a href="{{ home }}">{{ name }}</a></h1>
+          {% endif %}</div>
+      </div>
+      <div class="col-sm-5 mt-6">{{ search }}</div>
+      <div class="col-sm-3 mt-4 text-center menu-account">
+          <div id="menu-account-icon"><i class="icon-user"></i></div>
+            <div id="menu-account-welcome" style="display: block;">
+                {% if logged %}
+           {{ text_logged }}
+           {% else %}
+               {{ text_welcome }}
+           {% endif %}
+            </div>
+          <div class="header_medium__client--drop">
+            <a href="{{ account }}">{{ text_account }}</a>
+            <a href="{{ order }}">Meus Pedidos</a>
+           <a href="{{ account_edit }}">Dados pessoais</a>
+            <a href="{{ address }}">Endereços</a>
+            {% if logged %}
+            <a href="{{ logout }}">{{ text_logout }}</a>
+            {% endif %}
+
+         
+              <!--<a href="/account" title="Minha Conta">Minha Conta</a>
+              <a style="color:#00abda" href="/account#/orders" title="Meus Pedidos">Meus Pedidos</a>
+              <a class="" href="account#/profile">Dados pessoais</a>
+              <a class="" href="account#/addresses">Endereços</a>-->
+             </div>
+         </div>
+      <div class="col-sm-1 mt-4 menu-cart">{{ cart }}</div>
+    </div>
+  </div>
+</header>
+{{ menu }}
+</div>
+{% endif %}
+ <div class="screen-overlay"></div> 

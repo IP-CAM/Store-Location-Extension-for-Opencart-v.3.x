@@ -1,0 +1,82 @@
+{{ header }}
+<div id="information-novidades">
+  <div  class="container">  
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }} novidades">{{ content_top }}
+        <div class="newsletter">
+            <h2><span>Novidades</span></h2>
+            <p class="firsttext">Fique por dentro de todas as<br> 
+                nossas <strong>novidades</strong> e <strong>promoções</strong></p>
+                <p class="secondtext">
+                    Cadastre-se para receber nossos e-mails 
+                    e descubra a vantagem  <span> de descontos</span> especiais na primeira compra!
+                </p>
+                <form id="form-novidades" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <div id="resultado"></div>
+                    
+                      <div class="form-group required">
+                        <div class="col-sm-12">
+                      <select name="type" class="custom-select custom-select-lg mb-3">
+                        <option value=""> --- Selecione --- </option>
+                        <option value="revenda">Revenda</option>
+                        <option value="consumidor">Consumidor</option>
+                      </select>
+                    </div>
+                   </div>
+                    <div class="form-group required">
+                        <div class="col-sm-12">
+                          <input type="text" name="name" value="" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <div class="col-sm-12">
+                          <input type="text" name="email" value="" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+                         </div>
+                      </div>
+                      <button type="button" id="button-send" class="btn btn-primary btn-lg btn-block">{{ button_send }}</button>
+                      {% if text_agree %}
+                       {{ text_agree }}
+                      <input type="checkbox" name="agree" value="1" checked="checked" />
+                        {% endif %}
+                      </div>
+                </form>
+        </div>
+   {{ content_bottom }}</div>
+    {{ column_right }}</div>
+  </div>  
+</div>
+<script type="text/javascript"><!--
+$('#button-send').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=information/novidades/send',
+		type: 'post',
+		dataType: 'json',
+		data: $('#form-novidades').serialize(),
+		beforeSend: function() {
+			$('#button-send').button('loading');
+		},
+		complete: function() {
+			$('#button-send').button('reset');
+		},
+		success: function(json) {
+			$('.alert-dismissible').remove();
+			if (json['error']) {
+				$('#resultado').after('<div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+			}
+			if (json['success']) {
+				$('#resultado').after('<div class="alert alert-success alert-dismissible"><i class="fas fa-check-circle"></i> ' + json['success'] + '</div>');
+				$('input[name=\'name\']').val('');
+				$('textarea[name=\'text\']').val('');
+			}
+		}
+	});
+});
+//--></script> 
+{{ footer }}
